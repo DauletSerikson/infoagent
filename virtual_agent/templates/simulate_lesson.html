@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulate Lesson</title>
+    <script>
+        async function simulateLesson() {
+            const context = document.getElementById("context").value;
+            const question = document.getElementById("question").value;
+
+            const response = await fetch("/api/simulate_lesson/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ context, question }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                document.getElementById("result").innerText = `Answer: ${result.answer}\nScore: ${result.score}`;
+            } else {
+                document.getElementById("result").innerText = `Error: ${result.error}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Simulate Lesson</h1>
+    <form onsubmit="event.preventDefault(); simulateLesson();">
+        <label for="context">Context:</label><br>
+        <textarea id="context" rows="5" cols="50" placeholder="Enter the lesson context here"></textarea><br><br>
+
+        <label for="question">Question:</label><br>
+        <input id="question" type="text" placeholder="Enter your question here"><br><br>
+
+        <button type="submit">Get Answer</button>
+    </form>
+
+    <h2>Result:</h2>
+    <pre id="result"></pre>
+</body>
+</html>
